@@ -4,7 +4,7 @@ function onInstall() {
       activeSpreadsheet.insertSheet('Email Config');
   
       var configSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Email Config');
-      var headers = [['Nome da Página', 'Email', 'Coluna Condicional', 'Condição', 'Assunto do Email', 'Coluna Marcação Envio']];
+      var headers = [['Nome da Página', 'Email', 'Coluna Condicional', 'Condição', 'Assunto do Email', 'Cc', 'Coluna Marcação Envio']];
   
       // Add correct names to the columns
       configSheet.getRange(1,1,1,headers[0].length).setValues(headers);
@@ -14,6 +14,19 @@ function onInstall() {
   };
 
 function sendEmails() {
+  var lock = LockService.getScriptLock();
+
+  for(let i = 0; i < 4; i++) {
+    lock.waitLock(60000); // lock 60 seconds
+    lock.releaseLock();
+
+    emailsFunction();
+    
+    Utilities.sleep(60000); // sleep for 60 seconds
+  }
+}
+
+function emailsFunction() {
 
     // Gets data from the email configuration sheet
     const configRange = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Email Config').getDataRange();
@@ -32,6 +45,8 @@ function sendEmails() {
         var emailSentCol = row['Coluna Marcação Envio'];
         var emailRecipientCol = row['Email'];
         var emailSubject = row['Assunto do Email'];
+        var emailCc = row['Cc'];
+
         // Gets data for emails
         var emailSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(row['Nome da Página']);
         var emailRange = emailSheet.getDataRange();
@@ -62,6 +77,7 @@ function sendEmails() {
 
                         GmailApp.sendEmail(row[emailRecipientCol], msgObj.subject, msgObj.text, {
                             htmlBody: msgObj.html,
+                            cc: emailCc,
                             name: 'Abraço Cultural'
                         });
                         // Save email sent date
@@ -83,7 +99,7 @@ function sendEmails() {
               emailSheet.getRange(2, emailSentColIdx+1, out.length).setValues(out);
             } catch(e) { };
           };
-    });  
+    });
 };
 
 /**
