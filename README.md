@@ -34,7 +34,7 @@ e avaliação de níveis das turmas de SP e RJ.
     d. **Condição:** Texto das células da **Coluna Condicional** que indicam que um email deve ser enviado (Importante que 
     estejam escritas idênticas na página de configuração e na página com os dados)  
     e. **Assunto do Email:** Assunto do email dos rascunhos que será usado para o envio  
-    f. **Cc:** Nome da coluna onde está o endereço de email a ser colocado em cópia  
+    f. **Cc:** Nome da coluna onde está o endereço de email a ser colocado em cópia. Se não tiver nenhum email para colocar como cópia, incluir a mesma coluna do destinatário para não ter erros no script
     g. **Coluna Marcação Envio:** Nome da coluna onde o carimbo de hora será incluído indicando quando o email foi enviado  
 
 > **Warning**  
